@@ -7,6 +7,6 @@ public class Health
 {
     [Key] public Guid Id { get; init; }
     [Required] public double BodyWeight { get; init; }
-    public List<BodyDiameter>? BodyDiameters { get; set; } = new List<BodyDiameter>();
-    public List<Result>? Results { get; set; } = new List<Result>();
+    public IEnumerable<BodyDiameter>? BodyDiameters { get; set; }
+    public IEnumerable<Result>? Results { get; set; }
 }

@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using Home_app.Models.Calendar.Enums;
 
-namespace Home_app.Models.Dto;
+namespace Home_app.Models.Calendar.Dto;
 
 public class EventCreateDto
 {
-    [Required] [MaxLength(50)] public string Name { get; init; } = null!;
-    [Required] [MaxLength(200)] public string Description { get; init; } = null!;
+    [Required] [MaxLength(50)] public string Name { get; set; } = null!;
+    [Required] [MaxLength(200)] public string Description { get; set; } = null!;
+    [Required] public DateTime DateTime{ get; set; }
 }

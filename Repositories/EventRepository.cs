@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Home_app.Repositories;
 
-public class CalendarRepository : ICalendarRepository
+public class EventRepository : IEventRepository
 {
     private readonly HomeAppContext _homeAppContext;
 
-    public CalendarRepository(HomeAppContext homeAppContext)
+    public EventRepository(HomeAppContext homeAppContext)
     {
         _homeAppContext = homeAppContext;
     }
@@ -17,6 +17,7 @@ public class CalendarRepository : ICalendarRepository
     public async Task<Event> CreateEvent(Event @event)
     {
         await _homeAppContext.AddAsync(@event);
+        await _homeAppContext.SaveChangesAsync();
         return @event;
     }
 
@@ -30,7 +31,7 @@ public class CalendarRepository : ICalendarRepository
         return await _homeAppContext.Events.FirstOrDefaultAsync(e => e.Id == id);
     }
 
-    public async Task<Event> EditEvent(Event @event)
+    public async Task<Event> UpdateEvent(Event @event)
     {
         _homeAppContext.Update(@event);
         await _homeAppContext.SaveChangesAsync();

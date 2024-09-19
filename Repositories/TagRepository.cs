@@ -14,7 +14,7 @@ public class TagRepository : ITagRepository
         _homeAppContext = homeAppContext;
     }
 
-    public async Task<Tag> CreateTag(Tag tag)
+    public async Task<Tag?> CreateTag(Tag tag)
     {
         await _homeAppContext.AddAsync(tag);
         await _homeAppContext.SaveChangesAsync();
@@ -32,14 +32,14 @@ public class TagRepository : ITagRepository
         return await _homeAppContext.Tags.FirstOrDefaultAsync(t => t.Id == id);
     }
 
-    public async Task<Tag> UpdateTag(Tag tag)
+    public async Task<Tag?> UpdateTag(Tag tag)
     {
         _homeAppContext.Tags.Update(tag);
         await _homeAppContext.SaveChangesAsync();
         return tag;
     }
 
-    public async Task<Tag> DeleteTag(Tag tag)
+    public async Task<Tag?> DeleteTag(Tag tag)
     {
         _homeAppContext.Tags.Remove(tag);
         await _homeAppContext.SaveChangesAsync();

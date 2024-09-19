@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Home_app.Models.Calendar;
-using Home_app.Models.Health;
 
 namespace Home_app.DBContext;
 
@@ -10,7 +9,7 @@ public class HomeAppContext : DbContext
     {
     }
 
+
     public DbSet<Event> Events { get; set; }
     public DbSet<Tag> Tags { get; set; }
-    public DbSet<Health> Healths { get; set; }
 }

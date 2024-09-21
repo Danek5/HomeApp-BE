@@ -11,11 +11,13 @@ namespace Home_app.Services;
 public class EventService : IEventService
 {
     private readonly IEventRepository _eventRepository;
+    private readonly ITagRepository _tagRepository;
     private readonly IMapper _mapper;
 
-    public EventService(IEventRepository eventRepository, IMapper mapper)
+    public EventService(IEventRepository eventRepository, ITagRepository tagRepository, IMapper mapper)
     {
         _eventRepository = eventRepository;
+        _tagRepository = tagRepository;
         _mapper = mapper;
     }
     
@@ -56,7 +58,39 @@ public class EventService : IEventService
         
         return await _eventRepository.UpdateEvent(updateEvent);
     }
-    
+
+    public async Task<Event?> AssignTag(Guid eventId, Guid tagId)
+    {
+        var @event = await _eventRepository.GetEventById(eventId);
+        var tag = await _tagRepository.GetTagById(tagId);
+        
+        if (@event == null || tag == null)
+        {
+            return null;
+        }
+
+        @event.Tags.Add(tag);
+        await _eventRepository.UpdateEvent(@event);
+        
+        return await _eventRepository.UpdateEvent(@event);
+    }
+
+    public async Task<Event?> UnassignTag(Guid eventId, Guid tagId)
+    {
+        var @event = await _eventRepository.GetEventById(eventId);
+        var tag = await _tagRepository.GetTagById(tagId);
+        
+        if (@event == null || tag == null)
+        {
+            return null;
+        }
+
+        @event.Tags.Remove(tag);
+        await _eventRepository.UpdateEvent(@event);
+
+        return await _eventRepository.UpdateEvent(@event);
+    }
+
     public async Task<Event?> DeleteEvent(Guid id)
     {
         var even = await _eventRepository.GetEventById(id);

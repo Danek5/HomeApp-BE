@@ -16,7 +16,7 @@ public class TagRepository : ITagRepository
 
     public async Task<Tag?> CreateTag(Tag tag)
     {
-        await _homeAppContext.AddAsync(tag);
+        await _homeAppContext.Tags.AddAsync(tag);
         await _homeAppContext.SaveChangesAsync();
         return tag;
     }

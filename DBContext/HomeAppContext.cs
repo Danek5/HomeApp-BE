@@ -9,7 +9,13 @@ public class HomeAppContext : DbContext
     {
     }
 
-
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Event>()
+            .HasMany(e => e.Tags)
+            .WithMany();
+    }
+    
     public DbSet<Event> Events { get; set; }
     public DbSet<Tag> Tags { get; set; }
 }

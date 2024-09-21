@@ -9,5 +9,7 @@ public interface IEventService
     Task<IEnumerable<Event?>> GetAllEvents();
     Task<Event?> GetEventById(Guid id);
     Task<Event?> UpdateEvent(Guid id, EventUpdateDto eventUpdateDto);
+    Task<Event?> AssignTag(Guid eventId, Guid tagId);
+    Task<Event?> UnassignTag(Guid eventId, Guid tagId);
     Task<Event?> DeleteEvent(Guid id);
 }

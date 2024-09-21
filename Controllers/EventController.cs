@@ -2,7 +2,6 @@ using Home_app.Models.Calendar;
 using Home_app.Models.Calendar.Dto;
 using Home_app.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
 
 namespace Home_app.Controllers
 {
@@ -44,6 +43,18 @@ namespace Home_app.Controllers
         public async Task<ActionResult<Event>> UpdateEvent(Guid id,[FromBody]  EventUpdateDto @event)
         {
             return Ok(await _eventService.UpdateEvent(id, @event));
+        }
+
+        [HttpPut("{eventId}/assign/{tagId}")]
+        public async Task<ActionResult<Event>> AssignTag(Guid eventId, Guid tagId)
+        {
+            return Ok(await _eventService.AssignTag(eventId, tagId));
+        }
+        
+        [HttpPut("{eventId}/unassign/{tagId}")]
+        public async Task<ActionResult<Event>> UnassignTag(Guid eventId, Guid tagId)
+        {
+            return Ok(await _eventService.UnassignTag(eventId, tagId));
         }
         
         //DELETE

@@ -22,6 +22,21 @@ namespace Home_app.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("EventTag", b =>
+                {
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TagsId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("EventId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("EventTag");
+                });
+
             modelBuilder.Entity("Home_app.Models.Calendar.Event", b =>
                 {
                     b.Property<Guid>("Id")
@@ -61,9 +76,6 @@ namespace Home_app.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("EventId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -74,21 +86,22 @@ namespace Home_app.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EventId");
-
                     b.ToTable("Tags");
                 });
 
-            modelBuilder.Entity("Home_app.Models.Calendar.Tag", b =>
+            modelBuilder.Entity("EventTag", b =>
                 {
                     b.HasOne("Home_app.Models.Calendar.Event", null)
-                        .WithMany("Tags")
-                        .HasForeignKey("EventId");
-                });
+                        .WithMany()
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            modelBuilder.Entity("Home_app.Models.Calendar.Event", b =>
-                {
-                    b.Navigation("Tags");
+                    b.HasOne("Home_app.Models.Calendar.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

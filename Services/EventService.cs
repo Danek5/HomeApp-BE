@@ -36,14 +36,12 @@ public class EventService : IEventService
 
     public async Task<IEnumerable<Event?>> GetAllEvents()
     {
-        var events = await _eventRepository.GetAllEvents();
-        return events;
+        return await _eventRepository.GetAllEvents();
     }
 
     public async Task<Event?> GetEventById(Guid id)
     {
-        var @event = await _eventRepository.GetEventById(id);
-        return @event;
+        return await _eventRepository.GetEventById(id);
     }
 
     public async Task<Event?> UpdateEvent(Guid id, EventUpdateDto eventUpdateDto)

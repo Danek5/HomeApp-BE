@@ -15,9 +15,11 @@ builder.Services.AddDbContext<HomeAppContext>(optionsBuilder =>
 
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
+builder.Services.AddScoped<IHealthRecordRepository, HealthRecordRepository>();
 
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<ITagServices, TagService>();
+builder.Services.AddScoped<IHealthServices, HealthServices>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

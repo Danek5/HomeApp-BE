@@ -89,6 +89,67 @@ namespace Home_app.Migrations
                     b.ToTable("Tags");
                 });
 
+            modelBuilder.Entity("Home_app.Models.Health.HealthRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("BodyWeight")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HealthRecords");
+                });
+
+            modelBuilder.Entity("Home_app.Models.Health.Lifts", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Exercise")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("HealthRecordId")
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("Weight")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HealthRecordId");
+
+                    b.ToTable("Lifts");
+                });
+
+            modelBuilder.Entity("Home_app.Models.Health.Measurements", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("BodyPart")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("Diameter")
+                        .HasColumnType("double precision");
+
+                    b.Property<Guid?>("HealthRecordId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HealthRecordId");
+
+                    b.ToTable("Measurements");
+                });
+
             modelBuilder.Entity("EventTag", b =>
                 {
                     b.HasOne("Home_app.Models.Calendar.Event", null)
@@ -102,6 +163,27 @@ namespace Home_app.Migrations
                         .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Home_app.Models.Health.Lifts", b =>
+                {
+                    b.HasOne("Home_app.Models.Health.HealthRecord", null)
+                        .WithMany("Lifts")
+                        .HasForeignKey("HealthRecordId");
+                });
+
+            modelBuilder.Entity("Home_app.Models.Health.Measurements", b =>
+                {
+                    b.HasOne("Home_app.Models.Health.HealthRecord", null)
+                        .WithMany("Measurements")
+                        .HasForeignKey("HealthRecordId");
+                });
+
+            modelBuilder.Entity("Home_app.Models.Health.HealthRecord", b =>
+                {
+                    b.Navigation("Lifts");
+
+                    b.Navigation("Measurements");
                 });
 #pragma warning restore 612, 618
         }

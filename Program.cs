@@ -29,7 +29,26 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 var app = builder.Build();
+Console.WriteLine(app.Environment.EnvironmentName);
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<HomeAppContext>();
+    try
+    {
+        dbContext.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        Log.Error(ex, "An error occurred while migrating the database.");
+        throw;
+    }
+}
+
+if (!app.Environment.IsDevelopment())
+{
+    //app.UseHttpsRedirection();
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();

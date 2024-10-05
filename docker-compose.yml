@@ -1,0 +1,35 @@
+﻿volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  homeapp-network:
+
+services:
+  home_app:
+    image: home_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5001:8080"
+    depends_on:
+      - homeapp-postgres
+    networks:
+      - homeapp-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+        
+  homeapp-postgres:
+    image: postgres:latest
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_USER: postgres
+      POSTGRES_DB: homeappdb
+    ports:
+      - "5432:5432"
+    networks:
+      - homeapp-network

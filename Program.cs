@@ -1,4 +1,5 @@
 using Home_app.DBContext;
+using Home_app.Infrastructure;
 using Home_app.Repositories;
 using Home_app.Repositories.Interfaces;
 using Home_app.Services;
@@ -45,13 +46,17 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 if (!app.Environment.IsDevelopment())
 {
     //app.UseHttpsRedirection();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
-app.UseSwagger();
-app.UseSwaggerUI();
+app.UseExceptionHandler();
 
 app.MapControllers();
 

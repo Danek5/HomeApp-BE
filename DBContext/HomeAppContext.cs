@@ -20,4 +20,6 @@ public class HomeAppContext : DbContext
     public DbSet<Event> Events { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<HealthRecord> HealthRecords { get; set; }
+    public DbSet<Lift> Lifts { get; set; }
+    public DbSet<Measurement> Measurements { get; set; }
 }

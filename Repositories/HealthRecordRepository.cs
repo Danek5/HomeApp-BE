@@ -24,7 +24,7 @@ public class HealthRecordRepository : IHealthRecordRepository
 
     public async Task<IEnumerable<HealthRecord?>> GetAllRecords()
     {
-        return await _homeAppContext.HealthRecords.Include(r => r.Measurements).Include(r => r.Lifts).ToListAsync();
+        return await _homeAppContext.HealthRecords.Include(m => m.Measurements).Include(r => r.Lifts).ToListAsync();
     }
 
     public async Task<IEnumerable<Measurement?>> GetAllMeasurements()

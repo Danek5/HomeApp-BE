@@ -26,39 +26,30 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
+    .WriteTo.Console(outputTemplate:"[{Timestamp:HH:mm:ss} {Level:u4}] {Message:lj}{NewLine}{Exception}")
     .CreateLogger();
-
-var app = builder.Build();
-Console.WriteLine(app.Environment.EnvironmentName);
-
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<HomeAppContext>();
-    try
-    {
-        dbContext.Database.Migrate();
-    }
-    catch (Exception ex)
-    {
-        Log.Error(ex, "An error occurred while migrating the database.");
-        throw;
-    }
-}
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
+var app = builder.Build();
+
+Console.WriteLine(app.Environment.EnvironmentName);
+
+using var scope = app.Services.CreateScope();
+await using var dbContext = scope.ServiceProvider.GetRequiredService<HomeAppContext>();
+await dbContext.Database.MigrateAsync();
+
 if (!app.Environment.IsDevelopment())
 {
-    //app.UseHttpsRedirection();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
 
 app.UseExceptionHandler();
 
 app.MapControllers();
 
 app.Run();
-

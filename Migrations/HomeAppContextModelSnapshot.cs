@@ -106,7 +106,7 @@ namespace Home_app.Migrations
                     b.ToTable("HealthRecords");
                 });
 
-            modelBuilder.Entity("Home_app.Models.Health.Lifts", b =>
+            modelBuilder.Entity("Home_app.Models.Health.Lift", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -128,7 +128,7 @@ namespace Home_app.Migrations
                     b.ToTable("Lifts");
                 });
 
-            modelBuilder.Entity("Home_app.Models.Health.Measurements", b =>
+            modelBuilder.Entity("Home_app.Models.Health.Measurement", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -165,14 +165,14 @@ namespace Home_app.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Home_app.Models.Health.Lifts", b =>
+            modelBuilder.Entity("Home_app.Models.Health.Lift", b =>
                 {
                     b.HasOne("Home_app.Models.Health.HealthRecord", null)
                         .WithMany("Lifts")
                         .HasForeignKey("HealthRecordId");
                 });
 
-            modelBuilder.Entity("Home_app.Models.Health.Measurements", b =>
+            modelBuilder.Entity("Home_app.Models.Health.Measurement", b =>
                 {
                     b.HasOne("Home_app.Models.Health.HealthRecord", null)
                         .WithMany("Measurements")

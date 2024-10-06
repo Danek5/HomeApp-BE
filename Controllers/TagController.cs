@@ -17,24 +17,53 @@ namespace Home_app.Controllers
             _tagServices = tagService;
         }
 
+        //POST
         [HttpPost]
         [ProducesResponseType(typeof(Tag), StatusCodes.Status201Created)]
-
-        public async Task<ActionResult<Tag>> CreateTag(TagCreateUpdateDto tagCreateUpdateDto)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json")]
+        public async Task<ActionResult<Tag>> CreateTag([FromBody]TagCreateUpdateDto tagCreateUpdateDto)
         {
-            return Ok(await _tagServices.CreateTag(tagCreateUpdateDto));
+            return CreatedAtAction(nameof(CreateTag), await _tagServices.CreateTag(tagCreateUpdateDto));
         }
 
+        //GET
         [HttpGet]
+        [ProducesResponseType(typeof(Tag), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json")]
         public async Task<ActionResult<IEnumerable<Tag>>> GetAllTags()
         {
             return Ok(await _tagServices.GetAllTags());
         }
         
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Tag), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json")]
         public async Task<ActionResult<Tag>> GetTagById(Guid id)
         {
             return Ok(await _tagServices.GetTagById(id));
+        }
+        
+        //PUT
+        [HttpPut]
+        [ProducesResponseType(typeof(Tag), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json")]
+        public async Task<ActionResult<Tag?>> UpdateTag(Guid id,[FromBody] TagCreateUpdateDto tagCreateUpdateDto)
+        {
+            return Ok(await _tagServices.UpdateTag(id, tagCreateUpdateDto));
+        }
+
+        //DELETE
+        [HttpDelete]
+        [ProducesResponseType(typeof(Tag), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json")]
+        public async Task<ActionResult<Tag?>> DeleteTag(Guid id)
+        {
+            return Ok(await _tagServices.DeleteTag(id));
         }
     }
 }

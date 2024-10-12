@@ -1,20 +1,20 @@
-
 using AutoMapper;
 using Home_app.Models.Calendar;
 using Home_app.Models.Calendar.Dto;
+using Home_app.Models.Calendar.Enums;
 using Home_app.Repositories.Interfaces;
 using Home_app.Services.Interfaces;
 using Serilog;
 
 namespace Home_app.Services;
 
-public class EventService : IEventService
+public class EventServices : IEventServices
 {
     private readonly IEventRepository _eventRepository;
     private readonly ITagRepository _tagRepository;
     private readonly IMapper _mapper;
 
-    public EventService(IEventRepository eventRepository, ITagRepository tagRepository, IMapper mapper)
+    public EventServices(IEventRepository eventRepository, ITagRepository tagRepository, IMapper mapper)
     {
         _eventRepository = eventRepository;
         _tagRepository = tagRepository;
@@ -36,7 +36,12 @@ public class EventService : IEventService
 
     public async Task<IEnumerable<Event?>> GetAllEvents()
     {
-        return await _eventRepository.GetAllEvents();
+        var e = await _eventRepository.GetAllEvents();
+        foreach (var v in e)
+        {
+            Console.WriteLine(v.DateTime);
+        }
+        return e;
     }
 
     public async Task<Event?> GetEventById(Guid id)
@@ -44,6 +49,77 @@ public class EventService : IEventService
         return await _eventRepository.GetEventById(id);
     }
 
+    public async Task<IEnumerable<Event?>> GetWeekEvents(DateOnly week)
+    {
+        var allEvents = await _eventRepository.GetAllEvents();
+        Console.WriteLine(week);
+        
+        var weekStartTime = week.ToDateTime(TimeOnly.MinValue);
+        var weekEndTime = weekStartTime.AddDays(7);
+        
+        var weekEvents = allEvents
+            .Where(evt => evt != null && evt.Frequency != Frequency.None && IsEventInWeek(evt, weekStartTime, weekEndTime))
+            .ToList();
+        
+        return weekEvents;
+    }
+
+    private bool IsEventInWeek(Event evt, DateTime start, DateTime end)
+    {
+        var occurrence = evt.DateTime;
+
+        switch (evt.Frequency)
+        {
+            case Frequency.Week:
+                while (occurrence <= end)
+                {
+                    if (occurrence >= start && occurrence <= end)
+                    {
+                        return true;
+                    }
+                    occurrence = occurrence.AddDays(7);
+                }
+                break;
+
+            case Frequency.TwoWeek:
+                while (occurrence <= end)
+                {
+                    if (occurrence >= start && occurrence <= end)
+                    {
+                        return true;
+                    }
+                    occurrence = occurrence.AddDays(14);
+                }
+                break;
+
+            case Frequency.Month:
+                while (occurrence <= end)
+                {
+                    if (occurrence >= start && occurrence <= end)
+                    {
+                        return true;
+                    }
+                    occurrence = occurrence.AddMonths(1);
+                }
+                break;
+            case Frequency.Year:
+                while (occurrence <= end)
+                {
+                    if (occurrence >= start && occurrence <= end)
+                    {
+                        return true;
+                    }
+                    occurrence = occurrence.AddYears(1);
+                }
+                break;
+            default:
+                return false;
+        }
+
+        return false;
+    }
+
+    
     public async Task<Event?> UpdateEvent(Guid id, EventUpdateDto eventUpdateDto)
     {
         var updateEvent = await _eventRepository.GetEventById(id);

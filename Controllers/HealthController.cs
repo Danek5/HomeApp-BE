@@ -74,7 +74,6 @@ namespace Home_app.Controllers
         {
             return Ok(await _healthServices.UpdateRecord(id, healthRecord));
         }
-
         
         [HttpPut("{id}/add_measurement")]
         [ProducesResponseType(typeof(HealthRecord), StatusCodes.Status200OK)]
@@ -93,7 +92,6 @@ namespace Home_app.Controllers
         {
             return Ok(await _healthServices.AddLift(id, liftCreateDto));
         }
-
 
 
         //DELETE

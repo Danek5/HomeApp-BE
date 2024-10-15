@@ -18,6 +18,11 @@ namespace Home_app.Controllers
         }
 
         //POST
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tagCreateUpdateDto"></param>
+        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(Tag), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -28,6 +33,10 @@ namespace Home_app.Controllers
         }
 
         //GET
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(typeof(Tag), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

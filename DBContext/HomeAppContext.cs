@@ -1,6 +1,8 @@
+using Home_app.Models;
 using Microsoft.EntityFrameworkCore;
 using Home_app.Models.Calendar;
 using Home_app.Models.Health;
+using Home_app.Models.Server;
 
 namespace Home_app.DBContext;
 
@@ -22,4 +24,5 @@ public class HomeAppContext : DbContext
     public DbSet<HealthRecord> HealthRecords { get; set; }
     public DbSet<Lift> Lifts { get; set; }
     public DbSet<Measurement> Measurements { get; set; }
+    public DbSet<ServerInfo> ServerInfos { get; set; }
 }

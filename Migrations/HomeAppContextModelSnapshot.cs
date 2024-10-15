@@ -150,6 +150,36 @@ namespace Home_app.Migrations
                     b.ToTable("Measurements");
                 });
 
+            modelBuilder.Entity("Home_app.Models.Server.ServerInfo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("AvailableMemory")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<double?>("CpuTemperature")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("CpuUsagePercentage")
+                        .HasColumnType("double precision");
+
+                    b.Property<decimal?>("GpuMemory")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<string>("GpuName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<decimal>("TotalMemory")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ServerInfos");
+                });
+
             modelBuilder.Entity("EventTag", b =>
                 {
                     b.HasOne("Home_app.Models.Calendar.Event", null)

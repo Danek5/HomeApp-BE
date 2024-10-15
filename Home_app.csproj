@@ -9,6 +9,11 @@
 
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="13.0.1" />
+        <PackageReference Include="Docker.DotNet" Version="3.125.15" />
+        <PackageReference Include="Hardware.Info" Version="101.0.0" />
+        <PackageReference Include="MassTransit" Version="8.2.6-develop.2042" />
+        <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.6-develop.2042" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
           <PrivateAssets>all</PrivateAssets>
@@ -22,12 +27,9 @@
         <PackageReference Include="RabbitMQ.Client" Version="7.0.0-rc.11" />
         <PackageReference Include="Serilog" Version="4.0.2-dev-02226" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+        <PackageReference Include="StackExchange.Redis" Version="2.8.16" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
         <PackageReference Include="UUIDNext" Version="3.0.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Models\Server\" />
     </ItemGroup>
 
 </Project>

@@ -18,7 +18,7 @@ builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 builder.Services.AddScoped<IHealthRecordRepository, HealthRecordRepository>();
 
-builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IEventServices, EventServices>();
 builder.Services.AddScoped<ITagServices, TagService>();
 builder.Services.AddScoped<IHealthServices, HealthServices>();
 

@@ -42,6 +42,12 @@ namespace Home_app.Controllers
         {
             return Ok(await _eventServices.GetEventById(id));
         }
+        
+        [HttpGet("day")]
+        public async Task<ActionResult<IEnumerable<Event>>> GetDayEvents(DateOnly day)
+        {
+            return Ok(await _eventServices.GetDayEvents(day));
+        }
 
         [HttpGet("week")]
         public async Task<ActionResult<IEnumerable<Event>>> GetWeekEvents(DateOnly week)

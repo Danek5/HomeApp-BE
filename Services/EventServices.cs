@@ -36,50 +36,61 @@ public class EventServices : IEventServices
 
     public async Task<IEnumerable<Event?>> GetAllEvents()
     {
-        var e = await _eventRepository.GetAllEvents();
-        foreach (var v in e)
-        {
-            Console.WriteLine(v.DateTime);
-        }
-        return e;
+        return await _eventRepository.GetAllEvents();
     }
 
     public async Task<Event?> GetEventById(Guid id)
     {
         return await _eventRepository.GetEventById(id);
     }
-
-    public async Task<IEnumerable<Event?>> GetWeekEvents(DateOnly week)
+    
+    public async Task<IEnumerable<Event?>> GetDayEvents(DateOnly? day)
     {
-        var allEvents = await _eventRepository.GetAllEvents();
-        Console.WriteLine(week);
+        if (day == null || day == DateOnly.MinValue)
+        {
+            day = DateOnly.FromDateTime(DateTime.Now);
+        }
+  
+        var allEvents = await _eventRepository.GetAllActiveEvents();
         
-        var weekStartTime = week.ToDateTime(TimeOnly.MinValue);
-        var weekEndTime = weekStartTime.AddDays(7);
+        var dayEvents = allEvents
+            .Where(evt => evt != null && IsEventOnDay(evt, day.Value))
+            .ToList();
+    
+        return dayEvents;
+    }
+
+    public async Task<IEnumerable<Event?>> GetWeekEvents(DateOnly? week)
+    {
+        if (week == null || week == DateOnly.MinValue)
+        {
+            week = DateOnly.FromDateTime(DateTime.Now);
+        }
+
+        var allEvents = await _eventRepository.GetAllActiveEvents();
+        
+        var weekEndTime = week.Value.AddDays(7);
         
         var weekEvents = allEvents
-            .Where(evt => evt != null && evt.Frequency != Frequency.None && IsEventInWeek(evt, weekStartTime, weekEndTime))
+            .Where(evt => evt != null && IsEventInWeek(evt, week.Value, weekEndTime))
             .ToList();
         
         return weekEvents;
     }
 
-    private bool IsEventInWeek(Event evt, DateTime start, DateTime end)
+    private bool IsEventInWeek(Event evt, DateOnly start, DateOnly end)
     {
-        var occurrence = evt.DateTime;
+        var occurrence = DateOnly.FromDateTime(evt.DateTime);
 
         switch (evt.Frequency)
         {
-            case Frequency.Week:
-                while (occurrence <= end)
-                {
-                    if (occurrence >= start && occurrence <= end)
-                    {
-                        return true;
-                    }
-                    occurrence = occurrence.AddDays(7);
-                }
+            case Frequency.None:
+                if (occurrence >= start && occurrence <= end) return true;
+                
                 break;
+            
+            case Frequency.Week:
+                return true;
 
             case Frequency.TwoWeek:
                 while (occurrence <= end)
@@ -112,8 +123,66 @@ public class EventServices : IEventServices
                     occurrence = occurrence.AddYears(1);
                 }
                 break;
+            
             default:
                 return false;
+        }
+
+        return false;
+    }
+
+    private bool IsEventOnDay(Event evt, DateOnly targetDay)
+    {
+        var occurrence = DateOnly.FromDateTime(evt.DateTime);
+
+        switch (evt.Frequency)
+        {
+            case Frequency.Week:
+                while (occurrence <= targetDay)
+                {
+                    if (occurrence == targetDay)
+                    {
+                        return true;
+                    }
+                    occurrence = occurrence.AddDays(7);
+                }
+                break;
+
+            case Frequency.TwoWeek:
+                while (occurrence <= targetDay)
+                {
+                    if (occurrence == targetDay)
+                    {
+                        return true;
+                    }
+                    occurrence = occurrence.AddDays(14);
+                }
+                break;
+
+            case Frequency.Month:
+                while (occurrence <= targetDay)
+                {
+                    if (occurrence == targetDay)
+                    {
+                        return true;
+                    }
+                    occurrence = occurrence.AddMonths(1);
+                }
+                break;
+
+            case Frequency.Year:
+                while (occurrence <= targetDay)
+                {
+                    if (occurrence == targetDay)
+                    {
+                        return true;
+                    }
+                    occurrence = occurrence.AddYears(1);
+                }
+                break;
+
+            case Frequency.None:
+                return evt.DateTime.Date == targetDay.ToDateTime(new TimeOnly());
         }
 
         return false;
@@ -169,5 +238,17 @@ public class EventServices : IEventServices
     {
         var even = await _eventRepository.GetEventById(id);
         return await _eventRepository.DeleteEvent(even!);
+    }
+
+    public async Task ArchiveExpiredEvents()
+    {
+        var allEvents = await _eventRepository.GetAllEvents();
+
+        foreach (var evt in allEvents)
+        {
+            if (evt?.Frequency != 0 || evt.DateTime > DateTime.UtcNow || evt.Archived) continue;
+            evt.Archived = true;
+            await _eventRepository.UpdateEvent(evt);
+        }
     }
 }

@@ -25,6 +25,11 @@ public class EventRepository : IEventRepository
     {
         return await _homeAppContext.Events.Include(e => e.Tags).ToListAsync();
     }
+    
+    public async Task<IEnumerable<Event?>> GetAllActiveEvents()
+    {
+        return await _homeAppContext.Events.Include(e => e.Tags).Where(e => e.Archived == false).ToListAsync();
+    }
 
     public async Task<Event?> GetEventById(Guid id)
     {

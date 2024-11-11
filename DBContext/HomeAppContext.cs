@@ -18,6 +18,11 @@ public class HomeAppContext : DbContext
             .HasMany(e => e.Tags)
             .WithMany();
     }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseLazyLoadingProxies();
+    }
     
     public DbSet<Event> Events { get; set; }
     public DbSet<Tag> Tags { get; set; }

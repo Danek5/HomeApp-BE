@@ -3,6 +3,7 @@ using System;
 using Home_app.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Home_app.Migrations
 {
     [DbContext(typeof(HomeAppContext))]
-    partial class HomeAppContextModelSnapshot : ModelSnapshot
+    [Migration("20241009214154_ServerInfo")]
+    partial class ServerInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,8 +49,8 @@ namespace Home_app.Migrations
                     b.Property<bool>("Archived")
                         .HasColumnType("boolean");
 
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -159,14 +162,18 @@ namespace Home_app.Migrations
                     b.Property<decimal>("AvailableMemory")
                         .HasColumnType("numeric(20,0)");
 
+                    b.Property<double?>("CpuTemperature")
+                        .HasColumnType("double precision");
+
                     b.Property<double>("CpuUsagePercentage")
                         .HasColumnType("double precision");
 
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<decimal?>("GpuMemory")
                         .HasColumnType("numeric(20,0)");
+
+                    b.Property<string>("GpuName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<decimal>("TotalMemory")
                         .HasColumnType("numeric(20,0)");

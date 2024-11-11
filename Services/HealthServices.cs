@@ -19,7 +19,7 @@ public class HealthServices : IHealthServices
     }
     
     
-    public async Task<HealthRecord?> CreateRecord(RecordCreateDto recordCreateDto)
+    public HealthRecord? CreateRecord(RecordCreateDto recordCreateDto)
     {
         if (recordCreateDto == null)
         {
@@ -28,7 +28,7 @@ public class HealthServices : IHealthServices
         }
 
         var record = _mapper.Map<HealthRecord>(recordCreateDto);
-        return await _healthRecordRepository.CreateRecord(record);
+        return _healthRecordRepository.CreateRecord(record);
     }
 
     public async Task<HealthRecord?> AddMeasurement(Guid id, MeasurementCreateDto measurementCreateDto)
@@ -43,7 +43,7 @@ public class HealthServices : IHealthServices
         var measurement = _mapper.Map<Measurement>(measurementCreateDto);
         record.Measurements?.Add(measurement);
 
-        return await _healthRecordRepository.UpdateRecord(record);
+        return _healthRecordRepository.UpdateRecord(record);
     }
 
     public async Task<HealthRecord?> AddLift(Guid id, LiftCreateDto liftCreateDto)
@@ -58,7 +58,7 @@ public class HealthServices : IHealthServices
         var lift = _mapper.Map<Lift>(liftCreateDto);
         record.Lifts?.Add(lift);
 
-        return await _healthRecordRepository.UpdateRecord(record);
+        return _healthRecordRepository.UpdateRecord(record);
     }
 
     public async Task<IEnumerable<HealthRecord?>> GetAllRecords()
@@ -91,7 +91,7 @@ public class HealthServices : IHealthServices
         }
 
         _mapper.Map(healthRecord, record);
-        return await _healthRecordRepository.UpdateRecord(record);
+        return _healthRecordRepository.UpdateRecord(record);
     }
 
     public async Task<HealthRecord?> DeleteRecord(Guid id)
@@ -103,7 +103,7 @@ public class HealthServices : IHealthServices
             return null;
         }
 
-        return await _healthRecordRepository.DeleteRecord(record);
+        return _healthRecordRepository.DeleteRecord(record);
     }
 
     public async Task<HealthRecord?> DeleteMeasurement(Guid recordId, Guid measurementId)
@@ -118,7 +118,7 @@ public class HealthServices : IHealthServices
 
         record.Measurements!.Remove(measurement);
 
-        return await _healthRecordRepository.UpdateRecord(record);
+        return _healthRecordRepository.UpdateRecord(record);
     }
 
     public async Task<HealthRecord?> DeleteLift(Guid recordId, Guid liftId)
@@ -133,7 +133,6 @@ public class HealthServices : IHealthServices
 
         record.Lifts!.Remove(lift);
 
-        return await _healthRecordRepository.UpdateRecord(record);
+        return _healthRecordRepository.UpdateRecord(record);
     }
-    
 }

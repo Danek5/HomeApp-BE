@@ -23,7 +23,7 @@ namespace Home_app.Controllers
         [Produces("application/json")]
         public async Task<ActionResult<HealthRecord>> CreateRecord([FromBody] RecordCreateDto recordCreateDto)
         {
-            return CreatedAtAction(nameof(CreateRecord), await _healthServices.CreateRecord(recordCreateDto));
+            return CreatedAtAction(nameof(CreateRecord), _healthServices.CreateRecord(recordCreateDto));
         }
         
         

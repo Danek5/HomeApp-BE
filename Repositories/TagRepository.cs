@@ -5,45 +5,38 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Home_app.Repositories;
 
-public class TagRepository : ITagRepository
+public class TagRepository : RepositoryBase<Tag>, ITagRepository
 {
     private readonly HomeAppContext _homeAppContext;
 
-    public TagRepository(HomeAppContext homeAppContext)
+    public TagRepository(HomeAppContext context) : base(context)
     {
-        _homeAppContext = homeAppContext;
     }
 
-    public async Task<Tag?> CreateTag(Tag tag)
+    public Tag? CreateTag(Tag tag)
     {
-        await _homeAppContext.Tags.AddAsync(tag);
-        await _homeAppContext.SaveChangesAsync();
-        return tag;
+        return Create(tag);
     }
 
 
     public async Task<IEnumerable<Tag?>> GetAllTags()
     {
-        return await _homeAppContext.Tags.ToListAsync();
+        return await GetAll().ToListAsync();
     }
 
     public async Task<Tag?> GetTagById(Guid id)
     {
-        return await _homeAppContext.Tags.FirstOrDefaultAsync(t => t.Id == id);
+        return await GetByCondition(t => t.Id == id).FirstOrDefaultAsync();
     }
 
-    public async Task<Tag?> UpdateTag(Tag tag)
+    public Tag? UpdateTag(Tag tag)
     {
-        _homeAppContext.Tags.Update(tag);
-        await _homeAppContext.SaveChangesAsync();
-        return tag;
+        return Update(tag);
     }
 
-    public async Task<Tag?> DeleteTag(Tag tag)
+    public Tag? DeleteTag(Tag tag)
     {
-        _homeAppContext.Tags.Remove(tag);
-        await _homeAppContext.SaveChangesAsync();
-        return tag;
+        return Delete(tag);
     }
     
 }

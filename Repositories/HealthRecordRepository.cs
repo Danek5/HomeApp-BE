@@ -5,68 +5,63 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Home_app.Repositories;
 
-public class HealthRecordRepository : IHealthRecordRepository
+public class HealthRecordRepository : RepositoryBase<HealthRecord>, IHealthRecordRepository
 {
     private readonly HomeAppContext _homeAppContext;
 
-    public HealthRecordRepository(HomeAppContext homeAppContext)
+    public HealthRecordRepository(HomeAppContext context) : base(context)
     {
-        _homeAppContext = homeAppContext;
     }
 
 
-    public async Task<HealthRecord?> CreateRecord(HealthRecord healthRecord)
+    public HealthRecord? CreateRecord(HealthRecord healthRecord)
     {
-        await _homeAppContext.HealthRecords.AddAsync(healthRecord);
-        await _homeAppContext.SaveChangesAsync();
-        return healthRecord;
+        return Create(healthRecord);
     }
 
     public async Task<IEnumerable<HealthRecord?>> GetAllRecords()
     {
-        return await _homeAppContext.HealthRecords.Include(m => m.Measurements).Include(r => r.Lifts).ToListAsync();
+        return await GetAll().ToListAsync();
     }
 
     public async Task<IEnumerable<Measurement?>> GetAllMeasurements()
     {
-        return await _homeAppContext.HealthRecords.SelectMany(m => m.Measurements!).ToListAsync();
+        return await GetAll()
+            .SelectMany(healthRecord => healthRecord.Measurements!)
+            .ToListAsync();
     }
 
     public async Task<IEnumerable<Lift?>> GetAllLifts()
     {
-        return await _homeAppContext.HealthRecords.SelectMany(l => l.Lifts!).ToListAsync();
+        return await GetAll().SelectMany(l => l.Lifts!).ToListAsync();
     }
 
     public async Task<HealthRecord?> GetRecordById(Guid id)
     {
-        return await _homeAppContext.HealthRecords.Include(r => r.Measurements).Include(r => r.Lifts)
-            .FirstOrDefaultAsync(r => r.Id == id);
+        return await GetByCondition(r => r.Id == id).FirstOrDefaultAsync();
     }
 
     public async Task<Measurement?> GetMeasurementById(Guid id)
     {
-        return await _homeAppContext.HealthRecords.SelectMany(r => r.Measurements!)
-            .FirstOrDefaultAsync(m => m.Id == id);
+        return await GetAll()
+            .SelectMany(healthRecord => healthRecord.Measurements!)
+            .FirstOrDefaultAsync(measurement => measurement.Id == id);
     }
-
-
+    
     public async Task<Lift?> GetLiftById(Guid id)
     {
-        return await _homeAppContext.HealthRecords.SelectMany(l => l.Lifts!)
-            .FirstOrDefaultAsync(l => l.Id == id);
+        return await GetAll()
+            .SelectMany(healthRecord => healthRecord.Lifts!)
+            .FirstOrDefaultAsync(lift => lift.Id == id);
     }
 
-    public async Task<HealthRecord?> UpdateRecord(HealthRecord healthRecords)
+    public HealthRecord? UpdateRecord(HealthRecord healthRecords)
     {
-        _homeAppContext.HealthRecords.Update(healthRecords);
-        await _homeAppContext.SaveChangesAsync();
-        return healthRecords;
+        return Update(healthRecords);
     }
 
-    public async Task<HealthRecord?> DeleteRecord(HealthRecord healthRecords)
+    public HealthRecord? DeleteRecord(HealthRecord healthRecords)
     {
-        _homeAppContext.HealthRecords.Remove(healthRecords);
-        await _homeAppContext.SaveChangesAsync();
-        return healthRecords;
+        return Delete(healthRecords);
     }
 }

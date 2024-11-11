@@ -5,48 +5,41 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Home_app.Repositories;
 
-public class EventRepository : IEventRepository
+public class EventRepository : RepositoryBase<Event>, IEventRepository
 {
     private readonly HomeAppContext _homeAppContext;
 
-    public EventRepository(HomeAppContext homeAppContext)
+    public EventRepository(HomeAppContext context) : base(context)
     {
-        _homeAppContext = homeAppContext;
     }
 
-    public async Task<Event?> CreateEvent(Event @event)
+    public Event? CreateEvent(Event @event)
     {
-        await _homeAppContext.Events.AddAsync(@event);
-        await _homeAppContext.SaveChangesAsync();
-        return @event;
+        return Create(@event);
     }
 
     public async Task<IEnumerable<Event?>> GetAllEvents()
     {
-        return await _homeAppContext.Events.Include(e => e.Tags).ToListAsync();
+        return await GetAll().ToListAsync();
     }
     
     public async Task<IEnumerable<Event?>> GetAllActiveEvents()
     {
-        return await _homeAppContext.Events.Include(e => e.Tags).Where(e => e.Archived == false).ToListAsync();
+        return await GetByCondition(e => e.Archived == false).ToListAsync();
     }
 
     public async Task<Event?> GetEventById(Guid id)
     {
-        return await _homeAppContext.Events.Include(e => e.Tags).FirstOrDefaultAsync(e => e.Id == id);
+        return await GetByCondition(e => e.Id == id).FirstOrDefaultAsync();
     }
 
-    public async Task<Event?> UpdateEvent(Event @event)
+    public Event? UpdateEvent(Event @event)
     {
-        _homeAppContext.Events.Update(@event);
-        await _homeAppContext.SaveChangesAsync();
-        return @event;
+        return  Update(@event);
     }
 
-    public async Task<Event?> DeleteEvent(Event @event)
+    public Event? DeleteEvent(Event @event)
     {
-        _homeAppContext.Events.Remove(@event);
-        await _homeAppContext.SaveChangesAsync();
-        return @event;
+        return Delete(@event);
     }
 }

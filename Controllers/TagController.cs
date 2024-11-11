@@ -27,9 +27,9 @@ namespace Home_app.Controllers
         [ProducesResponseType(typeof(Tag), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json")]
-        public async Task<ActionResult<Tag>> CreateTag([FromBody]TagCreateUpdateDto tagCreateUpdateDto)
+        public async Task<ActionResult<TagCreateUpdateDto>> CreateTag([FromBody]TagCreateUpdateDto tagCreateUpdateDto)
         {
-            return CreatedAtAction(nameof(CreateTag), await _tagServices.CreateTag(tagCreateUpdateDto));
+            return CreatedAtAction(nameof(CreateTag), _tagServices.CreateTag(tagCreateUpdateDto));
         }
 
         //GET
@@ -46,6 +46,11 @@ namespace Home_app.Controllers
             return Ok(await _tagServices.GetAllTags());
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Tag), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -56,7 +61,13 @@ namespace Home_app.Controllers
         }
         
         //PUT
-        [HttpPut]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="tagCreateUpdateDto"></param>
+        /// <returns></returns>
+        [HttpPut("{id}")]
         [ProducesResponseType(typeof(Tag), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json")]
@@ -66,7 +77,12 @@ namespace Home_app.Controllers
         }
 
         //DELETE
-        [HttpDelete]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
         [ProducesResponseType(typeof(Tag), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces("application/json")]

@@ -17,8 +17,7 @@ public class TagService : ITagServices
         _mapper = mapper;
     }
 
-
-    public async Task<Tag?> CreateTag(TagCreateUpdateDto tagCreateUpdateDto)
+    public Tag? CreateTag(TagCreateUpdateDto tagCreateUpdateDto)
     {
         if (tagCreateUpdateDto == null)
         {
@@ -26,7 +25,7 @@ public class TagService : ITagServices
         }
 
         var tagCreate = _mapper.Map<Tag>(tagCreateUpdateDto);
-        return await _tagRepository.CreateTag(tagCreate);
+        return _tagRepository.CreateTag(tagCreate);
     }
 
     public async Task<IEnumerable<Tag?>> GetAllTags()
@@ -49,14 +48,12 @@ public class TagService : ITagServices
         }
 
         _mapper.Map(tagCreateUpdateDto, tagUpdate);
-        return await _tagRepository.UpdateTag(tagUpdate);
+        return _tagRepository.UpdateTag(tagUpdate);
     }
-
-
-
+    
     public async Task<Tag?> DeleteTag(Guid id)
     {
         var even = await _tagRepository.GetTagById(id);
-        return await _tagRepository.DeleteTag(even!);
+        return _tagRepository.DeleteTag(even!);
     }
 }

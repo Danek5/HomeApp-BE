@@ -5,7 +5,7 @@ namespace Home_app.Services.Interfaces;
 
 public interface IEventServices
 {
-    Event? CreateEvent(EventCreateDto eventCreateDto);
+    Task<Event?> CreateEvent(EventCreateDto eventCreateDto);
     Task<IEnumerable<Event?>> GetAllEvents();
     Task<Event?> GetEventById(Guid id);
     Task<IEnumerable<Event?>> GetDayEvents(DateOnly? day);

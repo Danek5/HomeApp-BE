@@ -5,7 +5,7 @@ namespace Home_app.Services.Interfaces;
 
 public interface IHealthServices
 {
-    HealthRecord? CreateRecord(RecordCreateDto recordCreateDto);
+    Task<HealthRecord?> CreateRecord(RecordCreateDto recordCreateDto);
     Task<HealthRecord?> AddMeasurement(Guid id, MeasurementCreateDto measurementCreateDto);
     Task<HealthRecord?> AddLift(Guid id, LiftCreateDto liftCreateDto);
     Task<IEnumerable<HealthRecord?>> GetAllRecords();

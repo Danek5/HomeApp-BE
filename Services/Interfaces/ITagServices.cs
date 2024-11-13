@@ -5,7 +5,7 @@ namespace Home_app.Services.Interfaces;
 
 public interface ITagServices
 {
-    Tag? CreateTag(TagCreateUpdateDto tagCreateUpdateDto);
+    Task<Tag?> CreateTag(TagCreateUpdateDto tagCreateUpdateDto);
     Task<IEnumerable<Tag?>> GetAllTags();
     Task<Tag?> GetTagById(Guid id);
     Task<Tag?> UpdateTag(Guid id, TagCreateUpdateDto tagCreateUpdateDto);

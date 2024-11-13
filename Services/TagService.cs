@@ -8,16 +8,16 @@ namespace Home_app.Services;
 
 public class TagService : ITagServices
 {
-    private readonly ITagRepository _tagRepository;
+    private readonly IRepositoryWrapper _repository;
     private readonly IMapper _mapper;
 
-    public TagService(ITagRepository tagRepository, IMapper mapper)
+    public TagService(IRepositoryWrapper repository, IMapper mapper)
     {
-        _tagRepository = tagRepository;
+        _repository = repository;
         _mapper = mapper;
     }
 
-    public Tag? CreateTag(TagCreateUpdateDto tagCreateUpdateDto)
+    public async Task<Tag?> CreateTag(TagCreateUpdateDto tagCreateUpdateDto)
     {
         if (tagCreateUpdateDto == null)
         {
@@ -25,22 +25,25 @@ public class TagService : ITagServices
         }
 
         var tagCreate = _mapper.Map<Tag>(tagCreateUpdateDto);
-        return _tagRepository.CreateTag(tagCreate);
+        var tag = _repository.Tag.CreateTag(tagCreate);
+
+        await _repository.SaveAsync();
+        return tag;
     }
 
     public async Task<IEnumerable<Tag?>> GetAllTags()
     {
-        return await _tagRepository.GetAllTags();
+        return await _repository.Tag.GetAllTags();
     }
 
     public async Task<Tag?> GetTagById(Guid id)
     {
-        return await _tagRepository.GetTagById(id);
+        return await _repository.Tag.GetTagById(id);
     }
 
     public async Task<Tag?> UpdateTag(Guid id, TagCreateUpdateDto tagCreateUpdateDto)
     {
-        var tagUpdate = await _tagRepository.GetTagById(id);
+        var tagUpdate = await _repository.Tag.GetTagById(id);
 
         if (tagUpdate == null || tagCreateUpdateDto == null)
         {
@@ -48,12 +51,16 @@ public class TagService : ITagServices
         }
 
         _mapper.Map(tagCreateUpdateDto, tagUpdate);
-        return _tagRepository.UpdateTag(tagUpdate);
+        return _repository.Tag.UpdateTag(tagUpdate);
     }
     
     public async Task<Tag?> DeleteTag(Guid id)
     {
-        var even = await _tagRepository.GetTagById(id);
-        return _tagRepository.DeleteTag(even!);
+        var tagToDelete = await _repository.Tag.GetTagById(id);
+
+        var tag = _repository.Tag.DeleteTag(tagToDelete ?? throw new InvalidOperationException());
+    
+        await _repository.SaveAsync();
+        return _repository.Tag.DeleteTag(tag!);
     }
 }

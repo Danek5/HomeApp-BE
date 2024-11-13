@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using Home_app.DBContext;
 using Home_app.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Home_app.Repositories;
 
@@ -15,7 +16,7 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     
     public IQueryable<T> GetAll()
     {
-        return HomeAppContext.Set<T>();
+        return HomeAppContext.Set<T>().AsNoTracking();
     }
 
     public IQueryable<T> GetByCondition(Expression<Func<T, bool>> expression)

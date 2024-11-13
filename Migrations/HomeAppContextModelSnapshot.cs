@@ -34,7 +34,7 @@ namespace Home_app.Migrations
 
                     b.HasIndex("TagsId");
 
-                    b.ToTable("EventTag");
+                    b.ToTable("EventTag", (string)null);
                 });
 
             modelBuilder.Entity("Home_app.Models.Calendar.Event", b =>
@@ -67,7 +67,7 @@ namespace Home_app.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", (string)null);
                 });
 
             modelBuilder.Entity("Home_app.Models.Calendar.Tag", b =>
@@ -86,7 +86,7 @@ namespace Home_app.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("Home_app.Models.Health.HealthRecord", b =>
@@ -103,7 +103,7 @@ namespace Home_app.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("HealthRecords");
+                    b.ToTable("HealthRecords", (string)null);
                 });
 
             modelBuilder.Entity("Home_app.Models.Health.Lift", b =>
@@ -125,7 +125,7 @@ namespace Home_app.Migrations
 
                     b.HasIndex("HealthRecordId");
 
-                    b.ToTable("Lifts");
+                    b.ToTable("Lifts", (string)null);
                 });
 
             modelBuilder.Entity("Home_app.Models.Health.Measurement", b =>
@@ -147,7 +147,7 @@ namespace Home_app.Migrations
 
                     b.HasIndex("HealthRecordId");
 
-                    b.ToTable("Measurements");
+                    b.ToTable("Measurements", (string)null);
                 });
 
             modelBuilder.Entity("Home_app.Models.Server.ServerInfo", b =>
@@ -173,7 +173,7 @@ namespace Home_app.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ServerInfos");
+                    b.ToTable("ServerInfos", (string)null);
                 });
 
             modelBuilder.Entity("EventTag", b =>

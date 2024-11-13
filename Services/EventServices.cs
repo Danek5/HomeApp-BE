@@ -10,18 +10,16 @@ namespace Home_app.Services;
 
 public class EventServices : IEventServices
 {
-    private readonly IEventRepository _eventRepository;
-    private readonly ITagRepository _tagRepository;
+    private IRepositoryWrapper _repository;
     private readonly IMapper _mapper;
 
-    public EventServices(IEventRepository eventRepository, ITagRepository tagRepository, IMapper mapper)
+    public EventServices(IRepositoryWrapper repository, IMapper mapper)
     {
-        _eventRepository = eventRepository;
-        _tagRepository = tagRepository;
+        _repository = repository;
         _mapper = mapper;
     }
 
-    public Event? CreateEvent(EventCreateDto eventCreateDto)
+    public async Task<Event?> CreateEvent(EventCreateDto eventCreateDto)
     {
         if (eventCreateDto == null)
         {
@@ -30,17 +28,19 @@ public class EventServices : IEventServices
         }
 
         var eventCreate = _mapper.Map<Event>(eventCreateDto);
-        return _eventRepository.CreateEvent(eventCreate);
+        var even = _repository.Event.CreateEvent(eventCreate);
+        await _repository.SaveAsync();
+        return even;
     }
 
     public async Task<IEnumerable<Event?>> GetAllEvents()
     {
-        return await _eventRepository.GetAllEvents();
+        return await _repository.Event.GetAllEvents();
     }
 
     public async Task<Event?> GetEventById(Guid id)
     {
-        return await _eventRepository.GetEventById(id);
+        return await _repository.Event.GetEventById(id);
     }
 
     public async Task<IEnumerable<Event?>> GetDayEvents(DateOnly? day)
@@ -50,7 +50,7 @@ public class EventServices : IEventServices
             day = DateOnly.FromDateTime(DateTime.Now);
         }
 
-        var allEvents = await _eventRepository.GetAllActiveEvents();
+        var allEvents = await _repository.Event.GetAllActiveEvents();
 
         var dayEvents = allEvents
             .Where(evt => evt != null && IsEventOnDay(evt, day.Value))
@@ -66,12 +66,12 @@ public class EventServices : IEventServices
             week = DateOnly.FromDateTime(DateTime.Now);
         }
 
-        var allEvents = await _eventRepository.GetAllActiveEvents();
+        var allEvents = await _repository.Event.GetAllActiveEvents();
         
         var weekEndTime = week.Value.AddDays(7);
 
         var weekEvents = allEvents
-            .Where(evt => evt != null && IsEventInWeek(evt, week.Value, weekEndTime))
+            .Where(evt => IsEventInWeek(evt, week.Value, weekEndTime))
             .ToList();
 
         return weekEvents;
@@ -189,21 +189,22 @@ public class EventServices : IEventServices
 
     public async Task<Event?> UpdateEvent(Guid id, EventUpdateDto eventUpdateDto)
     {
-        var updateEvent = await _eventRepository.GetEventById(id);
+        var updateEvent = await _repository.Event.GetEventById(id);
         if (eventUpdateDto == null || updateEvent == null)
         {
             return null;
         }
 
         _mapper.Map(eventUpdateDto, updateEvent);
-
-        return _eventRepository.UpdateEvent(updateEvent);
+        var even = _repository.Event.UpdateEvent(updateEvent);
+        await _repository.SaveAsync();
+        return even;
     }
 
     public async Task<Event?> AssignTag(Guid eventId, Guid tagId)
     {
-        var @event = await _eventRepository.GetEventById(eventId);
-        var tag = await _tagRepository.GetTagById(tagId);
+        var @event = await _repository.Event.GetEventById(eventId);
+        var tag = await _repository.Tag.GetTagById(tagId);
 
         if (@event == null || tag == null)
         {
@@ -211,15 +212,17 @@ public class EventServices : IEventServices
         }
 
         @event.Tags.Add(tag); 
-        _eventRepository.UpdateEvent(@event);
-
-        return _eventRepository.UpdateEvent(@event);
+        _repository.Event.UpdateEvent(@event);
+        var even = _repository.Event.UpdateEvent(@event);
+        
+        await _repository.SaveAsync();
+        return even;
     }
 
     public async Task<Event?> UnassignTag(Guid eventId, Guid tagId)
     {
-        var @event = await _eventRepository.GetEventById(eventId);
-        var tag = await _tagRepository.GetTagById(tagId);
+        var @event = await _repository.Event.GetEventById(eventId);
+        var tag = await _repository.Tag.GetTagById(tagId);
 
         if (@event == null || tag == null)
         {
@@ -227,29 +230,36 @@ public class EventServices : IEventServices
         }
 
         @event.Tags.Remove(tag);
-        _eventRepository.UpdateEvent(@event);
+        _repository.Event.UpdateEvent(@event);
+        var even = _repository.Event.UpdateEvent(@event);
 
-        return _eventRepository.UpdateEvent(@event);
+        await _repository.SaveAsync();
+        return even;
     }
 
     public async Task<Event?> DeleteEvent(Guid id)
     {
-        var eventEntity = await _eventRepository.GetEventById(id);
+        var eventEntity = await _repository.Event.GetEventById(id);
         if (eventEntity == null) return null;
-        return _eventRepository.DeleteEvent(eventEntity);
+        var even = _repository.Event.DeleteEvent(eventEntity);
+
+        await _repository.SaveAsync();
+        return even;
     }
 
     public async Task ArchiveExpiredEvents()
     {
-        var allEvents = await _eventRepository.GetAllEvents();
+        var allEvents = await _repository.Event.GetAllEvents();
 
         foreach (var evt in allEvents)
         {
             if (evt?.Frequency == Frequency.None && evt.Date.ToDateTime(new TimeOnly()) <= DateTime.UtcNow && !evt.Archived)
             {
                 evt.Archived = true;
-                _eventRepository.UpdateEvent(evt);
+                _repository.Event.UpdateEvent(evt);
             }
         }
+
+        await _repository.SaveAsync();
     }
 }

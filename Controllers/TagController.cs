@@ -29,7 +29,7 @@ namespace Home_app.Controllers
         [Produces("application/json")]
         public async Task<ActionResult<TagCreateUpdateDto>> CreateTag([FromBody]TagCreateUpdateDto tagCreateUpdateDto)
         {
-            return CreatedAtAction(nameof(CreateTag), _tagServices.CreateTag(tagCreateUpdateDto));
+            return CreatedAtAction(nameof(CreateTag), await _tagServices.CreateTag(tagCreateUpdateDto));
         }
 
         //GET

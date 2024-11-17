@@ -78,6 +78,19 @@ namespace Home_app.Controllers
         {
             return Ok(await _eventServices.GetWeekEvents(week));
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        [HttpGet("month")]
+        public async Task<ActionResult<IEnumerable<Event>>> GetMonthEvents(DateOnly month)
+        {
+            return Ok(await _eventServices.GetMonthEvents(month));
+        }
+        
+        
         
         //PUT
         /// <summary>

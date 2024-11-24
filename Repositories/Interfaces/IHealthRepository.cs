@@ -8,6 +8,7 @@ public interface IHealthRecordRepository
     Task<IEnumerable<Measurement?>> GetAllMeasurements();
     Task<IEnumerable<Lift?>> GetAllLifts();
     Task<HealthRecord?> GetRecordById(Guid id);
+    Task<HealthRecord?> GetRecordByDate(DateOnly date);
     Task<Measurement?> GetMeasurementById(Guid id);
     Task<Lift?> GetLiftById(Guid id);
     HealthRecord? CreateRecord(HealthRecord healthRecord);

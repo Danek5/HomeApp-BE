@@ -26,12 +26,20 @@ public class HealthServices : IHealthServices
             Log.Information("Health record not created");
             return null;
         }
+        
+        var record = _mapper.Map<HealthRecord>(recordCreateDto);
+        var existingRecord = await _repository.Health.GetRecordByDate(record.Date);
 
-        var recordToCreate = _mapper.Map<HealthRecord>(recordCreateDto);
-        var record = _repository.Health.CreateRecord(recordToCreate);
+        if (existingRecord != null)
+        {
+            Log.Information($"Health record for {record.Date} already exists");
+            throw new Exception($"Health record for {record.Date} already exists");
+        }
+        
+        var recordResponse = _repository.Health.CreateRecord(record);
 
         await _repository.SaveAsync();
-        return record;
+        return recordResponse;
     }
 
     public async Task<HealthRecord?> AddMeasurement(Guid id, MeasurementCreateDto measurementCreateDto)
@@ -113,6 +121,8 @@ public class HealthServices : IHealthServices
             return null;
         }
 
+        record.Measurements?.Clear();
+        record.Lifts?.Clear();
         var recordResult = _repository.Health.DeleteRecord(record);
 
         await _repository.SaveAsync();

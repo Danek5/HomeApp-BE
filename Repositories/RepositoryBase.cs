@@ -16,7 +16,7 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     
     public IQueryable<T> GetAll()
     {
-        return HomeAppContext.Set<T>().AsNoTracking();
+        return HomeAppContext.Set<T>();
     }
 
     public IQueryable<T> GetByCondition(Expression<Func<T, bool>> expression)

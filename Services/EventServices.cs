@@ -10,7 +10,7 @@ namespace Home_app.Services;
 
 public class EventServices : IEventServices
 {
-    private IRepositoryWrapper _repository;
+    private readonly IRepositoryWrapper _repository;
     private readonly IMapper _mapper;
 
     public EventServices(IRepositoryWrapper repository, IMapper mapper)
@@ -21,12 +21,6 @@ public class EventServices : IEventServices
 
     public async Task<Event?> CreateEvent(EventCreateDto eventCreateDto)
     {
-        if (eventCreateDto == null)
-        {
-            Log.Information("Event creation failed");
-            return null;
-        }
-
         var eventCreate = _mapper.Map<Event>(eventCreateDto);
         var even = _repository.Event.CreateEvent(eventCreate);
         await _repository.SaveAsync();
@@ -73,7 +67,7 @@ public class EventServices : IEventServices
         var weekEvents = allEvents
             .Where(evt => IsEventInWeek(evt, week.Value, weekEndTime))
             .ToList();
-
+        
         return weekEvents;
     }
 
@@ -154,9 +148,9 @@ public class EventServices : IEventServices
         return false;
     }
     
-    private bool IsEventInWeek(Event evt, DateOnly start, DateOnly end)
+    private bool IsEventInWeek(Event? evt, DateOnly start, DateOnly end)
     {
-        var occurrence = evt.Date;
+        var occurrence = evt!.Date;
 
         switch (evt.Frequency)
         {
@@ -207,9 +201,9 @@ public class EventServices : IEventServices
         return false;
     }
     
-    private bool IsEventInMonth(Event evt, DateOnly start, DateOnly end)
+    private bool IsEventInMonth(Event? evt, DateOnly start, DateOnly end)
     {
-        var occurrence = evt.Date;
+        var occurrence = evt!.Date;
 
         switch (evt.Frequency)
         {
@@ -263,7 +257,7 @@ public class EventServices : IEventServices
     public async Task<Event?> UpdateEvent(Guid id, EventUpdateDto eventUpdateDto)
     {
         var updateEvent = await _repository.Event.GetEventById(id);
-        if (eventUpdateDto == null || updateEvent == null)
+        if (updateEvent == null)
         {
             return null;
         }

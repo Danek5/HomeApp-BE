@@ -12,13 +12,13 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "5001:8080"
+      - "5000:8080"
     depends_on:
       - homeapp-postgres
     networks:
       - homeapp-network
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=Docker
         
   homeapp-postgres:
     image: postgres:latest
@@ -34,3 +34,14 @@ services:
     networks:
       - homeapp-network
 
+#  homeapp_frontend:
+#    image: homeapp_frontend
+#    build:
+#      context: C:/Users/danek/WebstormProjects/homeapp-fe
+#      dockerfile: Dockerfile
+#    ports:
+#      - "3000:3000"
+#    depends_on:
+#      - home_app
+#    networks:
+#      - homeapp-network

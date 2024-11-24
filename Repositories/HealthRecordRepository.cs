@@ -7,8 +7,6 @@ namespace Home_app.Repositories;
 
 public class HealthRecordRepository : RepositoryBase<HealthRecord>, IHealthRecordRepository
 {
-    private readonly HomeAppContext _homeAppContext;
-
     public HealthRecordRepository(HomeAppContext context) : base(context)
     {
     }
@@ -39,6 +37,11 @@ public class HealthRecordRepository : RepositoryBase<HealthRecord>, IHealthRecor
     public async Task<HealthRecord?> GetRecordById(Guid id)
     {
         return await GetByCondition(r => r.Id == id).FirstOrDefaultAsync();
+    }
+    
+    public async Task<HealthRecord?> GetRecordByDate(DateOnly date)
+    {
+        return await GetByCondition(r => r.Date == date).FirstOrDefaultAsync();
     }
 
     public async Task<Measurement?> GetMeasurementById(Guid id)

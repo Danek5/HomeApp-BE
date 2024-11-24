@@ -7,8 +7,6 @@ namespace Home_app.Repositories;
 
 public class EventRepository : RepositoryBase<Event>, IEventRepository
 {
-    private readonly HomeAppContext _homeAppContext;
-
     public EventRepository(HomeAppContext context) : base(context)
     {
     }

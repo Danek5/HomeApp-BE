@@ -7,8 +7,6 @@ namespace Home_app.Repositories;
 
 public class TagRepository : RepositoryBase<Tag>, ITagRepository
 {
-    private readonly HomeAppContext _homeAppContext;
-
     public TagRepository(HomeAppContext context) : base(context)
     {
     }

@@ -17,6 +17,9 @@ public class HomeAppContext : DbContext
         modelBuilder.Entity<Event>()
             .HasMany(e => e.Tags)
             .WithMany();
+        modelBuilder.Entity<HealthRecord>()
+            .HasIndex(r => r.Date)
+            .IsUnique();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -13,4 +13,6 @@ public class Event
     public Frequency Frequency { get; set; }
     public bool Finished { get; set; }
     public bool Archived { get; set; }
+    
+    public byte[]? ImageData { get; set; }
 }

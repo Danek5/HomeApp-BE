@@ -4,7 +4,7 @@ using Home_app.Services;
 
 namespace Home_app.Controllers
 {
-    [Route("[controller]")]
+  /*  [Route("[controller]")]
     [ApiController]
     
     public class DockerController : ControllerBase
@@ -38,5 +38,5 @@ namespace Home_app.Controllers
             var containerDetails = await _dockerService.GetContainerDetails(id);
             return Ok(containerDetails);
         }
-    }
+    }*/
 }

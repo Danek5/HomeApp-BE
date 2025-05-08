@@ -29,7 +29,9 @@ namespace Home_app.Controllers
         [Produces("application/json")]
         public async Task<ActionResult<Event>> CreateEvent([FromBody] EventCreateDto @event)
         {
-            return CreatedAtAction(nameof(CreateEvent), await _eventServices.CreateEvent(@event));
+            var createdEvent = await _eventServices.CreateEvent(@event);
+            
+            return CreatedAtAction(nameof(CreateEvent), createdEvent);
         }
         
         

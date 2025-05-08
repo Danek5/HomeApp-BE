@@ -7,7 +7,7 @@ namespace Home_app.Services;
 
 public class DockerService
 {
-    private readonly DockerClient _dockerClient;
+ /*   private readonly DockerClient _dockerClient;
 
     public DockerService()
     {
@@ -45,5 +45,5 @@ public class DockerService
     }
     
 
-    
+    */
 }

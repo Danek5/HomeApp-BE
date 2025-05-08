@@ -279,7 +279,7 @@ public class EventServices : IEventServices
         }
 
         @event.Tags.Add(tag); 
-        _repository.Event.UpdateEvent(@event);
+
         var even = _repository.Event.UpdateEvent(@event);
         
         await _repository.SaveAsync();

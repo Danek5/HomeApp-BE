@@ -16,7 +16,7 @@ public class EventRepository : RepositoryBase<Event>, IEventRepository
         return Create(@event);
     }
 
-    public async Task<IEnumerable<Event?>> GetAllEvents()
+    public async Task<IEnumerable<Event>> GetAllEvents()
     {
         return await GetAll().ToListAsync();
     }

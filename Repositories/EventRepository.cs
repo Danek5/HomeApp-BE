@@ -11,10 +11,6 @@ public class EventRepository : RepositoryBase<Event>, IEventRepository
     {
     }
 
-    public Event? CreateEvent(Event @event)
-    {
-        return Create(@event);
-    }
 
     public async Task<IEnumerable<Event>> GetAllEvents()
     {
@@ -31,6 +27,17 @@ public class EventRepository : RepositoryBase<Event>, IEventRepository
         return await GetByCondition(e => e.Id == id).FirstOrDefaultAsync();
     }
 
+    public Event? CreateEvent(Event @event)
+    {
+        return Create(@event);
+    }
+    
+    public List<Event?> CreateEvents(List<Event> events)
+    {
+        return CreateBatch(events);
+    }
+    
+    
     public Event? UpdateEvent(Event @event)
     {
         return  Update(@event);

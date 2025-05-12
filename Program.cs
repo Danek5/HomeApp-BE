@@ -36,7 +36,24 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddDbContext<HomeAppContext>(optionsBuilder =>
-    optionsBuilder.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    var host = Environment.GetEnvironmentVariable("PGHOST");
+    var port = Environment.GetEnvironmentVariable("PGPORT");
+    var database = Environment.GetEnvironmentVariable("PGDATABASE");
+    var user = Environment.GetEnvironmentVariable("PGUSER");
+    var password = Environment.GetEnvironmentVariable("PGPASSWORD");
+
+    if (!string.IsNullOrEmpty(host))
+    {
+        var connectionString = $"Host={host};Port={port};Database={database};Username={user};Password={password};Ssl Mode=Require;Trust Server Certificate=true;";
+        optionsBuilder.UseNpgsql(connectionString);
+    }
+    else
+    {
+        optionsBuilder.UseNpgsql(
+            builder.Configuration.GetConnectionString("DefaultConnection"));
+    }
+});
 
 
 builder.Services.AddEndpointsApiExplorer();

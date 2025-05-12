@@ -19,14 +19,6 @@ public class EventServices : IEventServices
         _mapper = mapper;
     }
 
-    public async Task<Event?> CreateEvent(EventCreateDto eventCreateDto)
-    {
-        var eventCreate = _mapper.Map<Event>(eventCreateDto);
-        var even = _repository.Event.CreateEvent(eventCreate);
-        await _repository.SaveAsync();
-        return even;
-    }
-
     public async Task<IEnumerable<Event?>> GetAllEvents()
     {
         return await _repository.Event.GetAllEvents();
@@ -253,6 +245,24 @@ public class EventServices : IEventServices
 
         return false;
     }
+    
+    
+    public async Task<Event?> CreateEvent(EventCreateDto eventCreateDto)
+    {
+        var eventCreate = _mapper.Map<Event>(eventCreateDto);
+        var even = _repository.Event.CreateEvent(eventCreate);
+        await _repository.SaveAsync();
+        return even;
+    }
+    
+    public async Task<List<Event?>> CreateEvents(List<EventCreateDto> eventsCreateDto)
+    {
+        var events = _mapper.Map<List<Event>>(eventsCreateDto);
+        var even = _repository.Event.CreateEvents(events);
+        await _repository.SaveAsync();
+        return even;
+    }
+    
     
     public async Task<Event?> UpdateEvent(Guid id, EventUpdateDto eventUpdateDto)
     {

@@ -8,6 +8,7 @@ public interface IEventRepository
     Task<IEnumerable<Event?>> GetAllActiveEvents();
     Task<Event?> GetEventById(Guid id);
     Event? CreateEvent(Event @event);
+    List<Event?> CreateEvents(List<Event> @event);
     Event? UpdateEvent(Event @event);
     Event? DeleteEvent(Event @event);
 }

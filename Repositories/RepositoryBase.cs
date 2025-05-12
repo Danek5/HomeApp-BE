@@ -29,6 +29,12 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
         return HomeAppContext.Set<T>().Add(entity).Entity;
     }
 
+    public List<T> CreateBatch(List<T> entities)
+    {
+        HomeAppContext.Set<T>().AddRange(entities);
+        return entities;
+    }
+    
     public T Update(T entity)
     {
         return HomeAppContext.Set<T>().Update(entity).Entity;

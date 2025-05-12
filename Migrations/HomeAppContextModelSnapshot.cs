@@ -53,7 +53,6 @@ namespace Home_app.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
@@ -62,9 +61,6 @@ namespace Home_app.Migrations
 
                     b.Property<int>("Frequency")
                         .HasColumnType("integer");
-
-                    b.Property<byte[]>("ImageData")
-                        .HasColumnType("bytea");
 
                     b.Property<string>("Name")
                         .IsRequired()

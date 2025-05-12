@@ -17,24 +17,7 @@ namespace Home_app.Controllers
         }
         
         
-        //POST
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="event"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [ProducesResponseType(typeof(Event), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Produces("application/json")]
-        public async Task<ActionResult<Event>> CreateEvent([FromBody] EventCreateDto @event)
-        {
-            var createdEvent = await _eventServices.CreateEvent(@event);
-            
-            return CreatedAtAction(nameof(CreateEvent), createdEvent);
-        }
-        
-        
+
         // GET
         /// <summary>
         /// 
@@ -93,7 +76,36 @@ namespace Home_app.Controllers
         }
         
         
+        //POST
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="event"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ProducesResponseType(typeof(Event), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json")]
+        public async Task<ActionResult<Event>> CreateEvent([FromBody] EventCreateDto @event)
+        {
+            var createdEvent = await _eventServices.CreateEvent(@event);
+            
+            return CreatedAtAction(nameof(CreateEvent), createdEvent);
+        }
+
+        [HttpPost("batch")]
+        [ProducesResponseType(typeof(Event), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json")]
+        public async Task<ActionResult<Event>> CreateEvents([FromBody] List<EventCreateDto> events)
+        {
+            var createdEvents = await _eventServices.CreateEvents(events);
+            
+            return CreatedAtAction(nameof(CreateEvent), createdEvents);
+        }
         
+        
+
         //PUT
         /// <summary>
         /// 
